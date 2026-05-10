@@ -3,3 +3,16 @@ venv
 
 #Dataset
 CMAPSS_Data
+
+#MLFlow files
+mlflow.db
+mlruns/
+mlartifacts/
+
+# Artifacts
+*.png
+*.csv
+
+# Models
+*.pkl
+*.joblib
