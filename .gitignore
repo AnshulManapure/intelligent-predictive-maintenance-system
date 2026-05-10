@@ -1,13 +1,28 @@
-#venv
-venv
+# Virtual Environment
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
+.idea/
 
 #Dataset
 CMAPSS_Data
 
 #MLFlow files
-mlflow.db
 mlruns/
 mlartifacts/
+
+#SQLite DBs
+*.db
 
 # Artifacts
 *.png
