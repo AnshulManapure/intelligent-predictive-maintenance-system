@@ -5,4 +5,6 @@ class MaintenanceState(TypedDict, total=False):
     prediction_payload: dict
     explanation_data: dict
     history_data: list
+    history_summary: dict
+    diagnostic_summary: dict
     maintenance_report: str

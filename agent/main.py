@@ -1,7 +1,8 @@
 from langgraph.graph import StateGraph, START, END
+
 from agent.state import MaintenanceState
 from agent.nodes import *
-from agent.tools import get_payload
+from agent.tools import *
 
 workflow = StateGraph(MaintenanceState)
 
@@ -17,8 +18,13 @@ workflow.add_node(
 )
 
 workflow.add_node(
-    "generate_report",
-    generate_report_node
+    "generate_diagnostic_summary",
+    generate_diagnostic_summary_node
+)
+
+workflow.add_node(
+    "generate_llm_report",
+    generate_llm_report_node
 )
 
 #Add edges connecting the nodes
@@ -34,11 +40,16 @@ workflow.add_edge(
 
 workflow.add_edge(
     "fetch_explanations",
-    "generate_report"
+    "generate_diagnostic_summary"
 )
 
 workflow.add_edge(
-    "generate_report",
+    "generate_diagnostic_summary",
+    "generate_llm_report"
+)
+
+workflow.add_edge(
+    "generate_llm_report",
     END
 )
 
