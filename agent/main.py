@@ -23,6 +23,11 @@ workflow.add_node(
 )
 
 workflow.add_node(
+    "retrieve_manual_context",
+    retrieve_manual_context_node
+)
+
+workflow.add_node(
     "generate_llm_report",
     generate_llm_report_node
 )
@@ -45,6 +50,11 @@ workflow.add_edge(
 
 workflow.add_edge(
     "generate_diagnostic_summary",
+    "retrieve_manual_context"
+)
+
+workflow.add_edge(
+    "retrieve_manual_context",
     "generate_llm_report"
 )
 

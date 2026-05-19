@@ -8,3 +8,4 @@ class MaintenanceState(TypedDict, total=False):
     history_summary: dict
     diagnostic_summary: dict
     maintenance_report: str
+    maintenance_context: str

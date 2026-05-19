@@ -5,6 +5,7 @@ from agent.prompts import DIAGNOSTIC_REPORT_PROMPT
 
 from agent.state import *
 from agent.tools import *
+from rag.retrieve import retrieve_maintenance_context
 
 load_dotenv()
 
@@ -42,8 +43,8 @@ def generate_diagnostic_summary_node(state:MaintenanceState):
     feature_list = [
         {
             "feature": x['feature'],
-            "impact": x['impact'],
-            "effect": "increase_failure_risk" if x['impact'] > 0 else "reduce_failure_risk"
+            "impact": round(x['impact'],4),
+            "effect": "increase failure risk" if x['impact'] > 0 else "reduce failure risk"
         }
         for x in top_features
     ]
@@ -58,6 +59,15 @@ def generate_diagnostic_summary_node(state:MaintenanceState):
     }
 
     state['diagnostic_summary'] = diagnostic_summary
+    return state
+
+def retrieve_manual_context_node(state: MaintenanceState):
+    diagnostic_summary = state['diagnostic_summary']
+    top_features = diagnostic_summary["top_features"]
+
+    context = retrieve_maintenance_context(top_features=top_features)
+
+    state["maintenance_context"] = context
     return state
 
 def generate_llm_report_node(state:MaintenanceState):
@@ -77,6 +87,8 @@ def generate_llm_report_node(state:MaintenanceState):
     latest_prob_percent = (round(latest_prob*100, 4) if latest_prob is not None else "N/A")
     highest_prob_percent = (round(highest_prob*100, 4) if highest_prob is not None else "N/A")
 
+    maintenance_context = state.get("maintenance_context", "No maintenance guidance retrieved.")
+
     prompt = DIAGNOSTIC_REPORT_PROMPT.format(
         engine_id=summary['engine_id'],
         prediction=summary['prediction'],
@@ -85,7 +97,8 @@ def generate_llm_report_node(state:MaintenanceState):
         latest_probability_percent=latest_prob_percent,
         highest_probability_percent=highest_prob_percent,
         risk_trend=history['risk_trend'],
-        top_features=top_features_text
+        top_features=top_features_text,
+        maintenance_context=maintenance_context
     )
 
     try:
