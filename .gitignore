@@ -31,3 +31,6 @@ mlartifacts/
 # Models
 *.pkl
 *.joblib
+
+#Vector embeddings
+chroma_db/

@@ -8,6 +8,7 @@ import shap
 from api import schemas
 from api import utils
 from api import database
+from agent.graph import *
 
 #Load Model
 mlflow.set_tracking_uri("http://127.0.0.1:5000")
@@ -96,4 +97,21 @@ def explain(readings: schemas.Readings):
     }
 
     return res
+
+
+@app.post('/diagnose', response_model=schemas.DiagnosticResponse)
+def diagnose(readings: schemas.Readings):
+    curr_state = {
+        "engine_id": readings.engine_id,
+        "prediction_payload": {
+            "engine_id": readings.engine_id,
+            "features": readings.features
+        }
+    }
+
+    result = graph.invoke(curr_state)
+
+    return {
+        "maintenance_report": result["maintenance_report"]
+    }
 

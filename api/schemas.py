@@ -11,7 +11,6 @@ class PredictionResponse(BaseModel):
     threshold: float
     model_version: str
 
-
 class FeatureImpact(BaseModel):
     feature: str
     impact: float
@@ -21,3 +20,6 @@ class ExplainResponse(BaseModel):
     failure_probability: float
     prediction: str
     top_features: list[FeatureImpact]
+
+class DiagnosticResponse(BaseModel):
+    maintenance_report: str
